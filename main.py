@@ -5,7 +5,7 @@ try:
     print("connected successfully")
 except Exception as e:
     print("Impossible connection")
-    # the cursor is what allows me to use the CDU SQL commands
+    # the cursor is what allows me to use the CRUD SQL commands
     # buffered means I can run multiple queries at a time without errors
 
 command_handler = db.cursor(buffered=True)
@@ -19,7 +19,9 @@ def admin_session():
         print("2. Register new Teacher")
         print("3. Delete Existing Student")
         print("4. Delete Existing Teacher")
-        print("5. Logout")
+        print("5. Show all registered students")
+        print("6. Show all registered teachers")
+        print("7. Logout")
 
         user_option = input(str("Option : "))
         if user_option == "1":
@@ -50,6 +52,20 @@ def admin_session():
             command_handler.execute(f"DELETE FROM users WHERE username = '{username}' AND privilege = 'teacher'")
             db.commit()
             print(username + " - Teacher - HAS BEEN REMOVED FROM THE SYSTEM")
+        elif user_option == "5":
+            print("All registered Students\n")
+            select_all_students = "SELECT * FROM users WHERE privilege = 'student' "
+            command_handler.execute(select_all_students)
+            students = command_handler.fetchall()
+            for student in students:
+                print(student)
+        elif user_option == "6":
+            print("All registered Teacher\n")
+            select_all_teachers = "SELECT * FROM users WHERE privilege = 'teacher' "
+            command_handler.execute(select_all_teachers)
+            teachers = command_handler.fetchall()
+            for teacher in teachers:
+                print(teacher)
 
 
 def auth_admin():
